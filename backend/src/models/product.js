@@ -12,7 +12,7 @@ const Product = sequelize.define(
 
     name: { type: Sequelize.STRING, allowNull: false },
     description: Sequelize.STRING,
-    expiration_date: { type: Sequelize.DATE, allowNull: false },
+    expiration_date: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
     supplier: Sequelize.STRING,
     nit_supplier: Sequelize.STRING,
     quantity: { type: Sequelize.INTEGER, allowNull: false },
