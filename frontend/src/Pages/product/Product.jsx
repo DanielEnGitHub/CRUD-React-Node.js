@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   getProducts,
   deleteProduct,
@@ -10,6 +10,9 @@ import useListAPI from "../../hooks/useListAPI";
 import TableComponent from "../../components/Tables/Table";
 import Swal from "sweetalert2";
 import moment from "moment";
+
+// excel
+import { DownloadTableExcel } from "react-export-table-to-excel";
 
 import { useForm } from "react-hook-form";
 
@@ -42,6 +45,8 @@ const Product = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [dataByID, setDataByID] = useState({});
+
+  const tableRef = useRef(null);
 
   // form
   const {
@@ -123,7 +128,7 @@ const Product = () => {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Category",
+      Header: "Products",
       columns: [
         {
           Header: "Name",
@@ -285,13 +290,24 @@ const Product = () => {
         </form>
       </Modal>
       <Button
-        style={{ marginBottom: "2px" }}
+        style={{ marginBottom: "2px", marginRight: "10px" }}
         onClick={() => handleShow()}
         variant="primary"
       >
         Add Product
       </Button>
-      <TableComponent columns={columns} data={data} />
+      <DownloadTableExcel
+        filename="product_table"
+        sheet="Product Report"
+        currentTableRef={tableRef.current}
+      >
+        <Button variant={"success"} >
+          {" "}
+          <i style={{marginRight: '5px'}} class="fa fa-file-excel-o" aria-hidden="true"></i> Export excel
+        </Button>
+      </DownloadTableExcel>
+
+      <TableComponent columns={columns} data={data} ref_={tableRef} />
     </div>
   );
 };

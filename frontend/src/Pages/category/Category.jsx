@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getCategories,
   deleteCategories,
@@ -14,6 +14,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 
+// excel
+import { DownloadTableExcel } from "react-export-table-to-excel";
+
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -28,6 +31,9 @@ const Category = () => {
   const { data, getData } = useListAPI({ getFunction: getCategories });
   const [isEdit, setIsEdit] = useState(false);
   const [dataByID, setDataByID] = useState({});
+
+  // ref
+  const tableRef = useRef(null);
 
   // modal
   const [show, setShow] = useState(false);
@@ -198,13 +204,28 @@ const Category = () => {
         </form>
       </Modal>
       <Button
-        style={{ marginBottom: "2px" }}
+        style={{ marginBottom: "2px", marginRight: "10px" }}
         onClick={() => handleShow()}
         variant="primary"
       >
         Add Category
       </Button>
-      <TableComponent columns={columns} data={data} />
+      <DownloadTableExcel
+        filename="category_report"
+        sheet="Category Report"
+        currentTableRef={tableRef.current}
+      >
+        <Button variant={"success"}>
+          {" "}
+          <i
+            style={{ marginRight: "5px" }}
+            class="fa fa-file-excel-o"
+            aria-hidden="true"
+          ></i>{" "}
+          Export excel
+        </Button>
+      </DownloadTableExcel>
+      <TableComponent columns={columns} data={data} ref_={tableRef} />
     </div>
   );
 };

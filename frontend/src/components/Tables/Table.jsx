@@ -2,7 +2,7 @@ import React from "react";
 import { useTable } from 'react-table'
 import Table from 'react-bootstrap/Table';
 
-const TableComponent = ({ columns, data }) => {
+const TableComponent = ({ columns, data, ref_ }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -11,7 +11,7 @@ const TableComponent = ({ columns, data }) => {
 
   // Render the UI for your table
   return (
-    <Table striped responsive {...getTableProps()}>
+    <Table striped responsive {...getTableProps()} ref={ref_}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
