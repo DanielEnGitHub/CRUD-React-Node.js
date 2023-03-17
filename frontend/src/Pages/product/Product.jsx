@@ -13,10 +13,27 @@ import moment from "moment";
 
 import { useForm } from "react-hook-form";
 
+// yup
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
 // boostrap
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
+
+// yup configuration
+const schema = yup.object().shape({
+  name: yup.string().required("Name product is required please !"),
+  description: yup.string().required("Description is required please !"),
+  existence: yup.string().required("Existence is required please !"),
+  expiration_date: yup
+    .string()
+    .required("Expiration date is required please !"),
+  price_cost: yup.string().required("Price cost is required please !"),
+  price_sale: yup.string().required("Price sale is required please !"),
+  quantity: yup.string().required("Quantity is required please !"),
+});
 
 const Product = () => {
   // modal
@@ -33,7 +50,7 @@ const Product = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: {} });
+  } = useForm({ defaultValues: {}, resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
     if (isEdit) {
@@ -42,6 +59,7 @@ const Product = () => {
       await createProduct(data);
     }
     getData();
+    setShow(false);
   };
 
   const handleClose = () => setShow(false);
@@ -81,13 +99,14 @@ const Product = () => {
       defaultValues.name = dataByID.name;
       defaultValues.description = dataByID.description;
       defaultValues.existence = dataByID.existence;
-      defaultValues.expiration_date = moment(dataByID.expiration_date).format("DD/MM/YYYY");
+      defaultValues.expiration_date = moment(dataByID.expiration_date).format(
+        "DD/MM/YYYY"
+      );
       defaultValues.price_cost = dataByID.price_cost;
       defaultValues.price_sale = dataByID.price_sale;
       defaultValues.supplier = dataByID.supplier;
       defaultValues.nit_supplier = dataByID.nit_supplier;
       defaultValues.quantity = dataByID.quantity;
-
     } else {
       defaultValues.name = "";
       defaultValues.description = "";
@@ -160,24 +179,33 @@ const Product = () => {
   ]);
 
   const form_input = [
-    { name: "name", type: "text", placeholder: "Product name", label: "Name" },
+    {
+      name: "name",
+      type: "text",
+      placeholder: "Product name",
+      label: "Name",
+      errors: errors.name?.message,
+    },
     {
       name: "description",
       type: "text",
       placeholder: "Product description",
       label: "Description",
+      errors: errors.description?.message,
     },
     {
       name: "existence",
       type: "number",
       placeholder: "Product existence",
       label: "Existence",
+      errors: errors.existence?.message,
     },
     {
       name: "expiration_date",
       type: "date",
       placeholder: "Product expiration date",
       label: "Expiration date",
+      errors: errors.expiration_date?.message,
     },
     {
       name: "supplier",
@@ -196,18 +224,21 @@ const Product = () => {
       type: "number",
       placeholder: "Product quantity",
       label: "Quantity",
+      errors: errors.quantity?.message,
     },
     {
       name: "price_cost",
       type: "number",
       placeholder: "Product price cost",
       label: "Price cost",
+      errors: errors.price_cost?.message,
     },
     {
       name: "price_sale",
       type: "number",
       placeholder: "Product price sale",
       label: "Price sale",
+      errors: errors.price_sale?.message,
     },
   ];
   return (
@@ -233,6 +264,9 @@ const Product = () => {
                       name={input.name}
                       {...register(input.name)}
                     />
+                    <p style={{ color: "red", marginLeft: "10px" }}>
+                      {input.errors}
+                    </p>
                   </div>
                 );
               })}
@@ -244,7 +278,7 @@ const Product = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button type="submit" variant="primary" onClick={handleClose}>
+            <Button type="submit" variant="primary">
               Save Changes
             </Button>
           </Modal.Footer>
