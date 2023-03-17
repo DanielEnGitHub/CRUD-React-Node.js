@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { getCategories } from "../../conection/category";
 import TableComponent from "../../components/Tables/Table";
+import useListAPI from "../../hooks/useListAPI";
 
 const Category = () => {
+  const { data } = useListAPI({ getFunction: getCategories });
   const columns = React.useMemo(
     () => [
       {
@@ -25,16 +27,6 @@ const Category = () => {
     ],
     []
   );
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await getCategories();
-      setData(response);
-    };
-    getData();
-  }, []);
 
   return (
     <div style={{ padding: "30px" }}>

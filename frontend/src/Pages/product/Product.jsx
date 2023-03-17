@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import { getProducts } from "../../conection/product";
+import useListAPI from "../../hooks/useListAPI";
 
 const Product = () => {
-  return (
-    <div>Product</div>
-  )
-}
+  const { data } = useListAPI({ getFunction: getProducts });
 
-export default Product
+  return <div>Product</div>;
+};
+
+export default Product;

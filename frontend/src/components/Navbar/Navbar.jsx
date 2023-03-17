@@ -29,11 +29,11 @@ const NavbarComponent = () => {
               </Link>
             </Nav.Link>
 
-            <Nav.Link>
+            {/* <Nav.Link>
               <Link style={textStyle} to="/reports">
                 Reports
               </Link>
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

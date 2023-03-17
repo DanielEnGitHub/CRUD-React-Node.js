@@ -11,7 +11,7 @@ const TableComponent = ({ columns, data }) => {
 
   // Render the UI for your table
   return (
-    <Table  {...getTableProps()}>
+    <Table striped  {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
