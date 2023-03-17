@@ -87,3 +87,30 @@ export const viewCategory = async (req, res) => {
       .json({ message: "Error getting request to backend D:" });
   }
 };
+
+// UPDATE
+export const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { category, description } = req.body;
+
+    const _category = await Category.findOne({
+      where: {
+        CategoryID: id,
+        active: true,
+      },
+    });
+
+    if (!_category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    await _category.update({ category, description });
+
+    res.json({ message: "Category updated" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error getting request to backend D:" });
+  }
+}

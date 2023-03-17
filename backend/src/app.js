@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 
 // import routes
 import CategoryRouter from "./routes/category.routes.js";
@@ -11,6 +12,7 @@ const app = express();
 // middlewares
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.use("/api", CategoryRouter);
