@@ -9,3 +9,13 @@ export const getProducts = async () => {
     return [];
   }
 };
+
+export const deleteProduct = async (id) => {
+  try {
+    const res = await axios.delete(`http://localhost:3000/api/product/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};

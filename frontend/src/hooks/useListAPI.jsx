@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 const useListAPI = ({ getFunction }) => {
   const [data, setData] = useState([]);
 
+  const getData = async () => {
+    const response = await getFunction();
+    setData(response);
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      const response = await getFunction();
-      setData(response);
-    };
     getData();
   }, []);
 
-  return { data };
+  return { data, getData };
 };
 
 export default useListAPI;
