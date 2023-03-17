@@ -2,32 +2,29 @@ import React from "react";
 import { getProducts, deleteProduct } from "../../conection/product";
 import useListAPI from "../../hooks/useListAPI";
 import TableComponent from "../../components/Tables/Table";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import moment from "moment";
 
 const Product = () => {
   const { data, getData } = useListAPI({ getFunction: getProducts });
-  
+
   const swalDelete = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteProduct(id)
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
+        deleteProduct(id);
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
         getData();
       }
-    })
-  }
+    });
+  };
 
   const columns = React.useMemo(
     () => [
@@ -48,7 +45,9 @@ const Product = () => {
           },
           {
             Header: "Date expiration",
-            accessor: "expiration_date",
+            accessor: (d) => {
+              return moment(d.expiration_date).format("DD/MM/YYYY");
+            },
           },
           {
             Header: "PriceCost",
