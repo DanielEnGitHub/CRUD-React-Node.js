@@ -35,3 +35,27 @@ export const createCategory = async (data) => {
     return [];
   }
 };
+
+
+// get by id
+export const getCategoryById = async (id) => {
+  try {
+    const res = await axios.get(`http://localhost:3000/api/category/${id}`);
+    return res.data;
+  } catch (error) {
+    return [];
+  }
+};
+
+// update
+export const putCategory = async (id, data) => {
+  try {
+    const res = await axios.put(
+      `http://localhost:3000/api/category/${id}`,
+      data
+    );
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};

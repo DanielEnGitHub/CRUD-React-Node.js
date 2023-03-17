@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getCategories,
   deleteCategories,
   createCategory,
+  getCategoryById,
+  putCategory,
 } from "../../conection/category";
 import TableComponent from "../../components/Tables/Table";
 import useListAPI from "../../hooks/useListAPI";
@@ -16,19 +18,35 @@ import { useForm } from "react-hook-form";
 
 const Category = () => {
   const { data, getData } = useListAPI({ getFunction: getCategories });
+  const [isEdit, setIsEdit] = useState(false);
+  const [dataByID, setDataByID] = useState({});
 
   // modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setIsEdit(false);
+    setShow(true);
+  };
+
+  const edit = async (id) => {
+    const response = await getCategoryById(id);
+    setDataByID(response);
+    setIsEdit(true);
+    setShow(true);
+  };
 
   // form
   const {
+    reset,
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: {} });
+
+  if (isEdit) {
+  }
 
   const swalDelete = (id) => {
     Swal.fire({
@@ -48,6 +66,18 @@ const Category = () => {
     });
   };
 
+  useEffect(() => {
+    let defaultValues = {};
+    if (isEdit) {
+      defaultValues.category = dataByID.category;
+      defaultValues.description = dataByID.description;
+    } else {
+      defaultValues.category = "";
+      defaultValues.description = "";
+    }
+    reset({ ...defaultValues });
+  }, [dataByID, isEdit]);
+
   const columns = React.useMemo(
     () => [
       {
@@ -65,13 +95,22 @@ const Category = () => {
             Header: "Actions",
             accessor: (d) => {
               return (
-                <a href>
-                  <i
-                    onClick={() => swalDelete(d.CategoryID)}
-                    className="fa fa-trash"
-                    aria-hidden="true"
-                  ></i>
-                </a>
+                <>
+                  <a href>
+                    <i
+                      onClick={() => swalDelete(d.CategoryID)}
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                    ></i>
+                  </a>
+                  <a href style={{ marginLeft: "15px" }}>
+                    <i
+                      onClick={() => edit(d.CategoryID)}
+                      className="fa fa-pencil"
+                      aria-hidden="true"
+                    ></i>
+                  </a>
+                </>
               );
             },
           },
@@ -82,7 +121,11 @@ const Category = () => {
   );
 
   const onSubmit = async (data) => {
-    await createCategory(data);
+    if (isEdit) {
+      await putCategory(dataByID.CategoryID, data);
+    } else {
+      await createCategory(data);
+    }
     getData();
   };
 
