@@ -59,3 +59,18 @@ export const putCategory = async (id, data) => {
     return null;
   }
 };
+
+// get cagetory async select
+export const getAsyncCategories = async () => {
+  try {
+    const res = await axios.get("http://localhost:3000/api/category");
+    const data = res.data.map((category) => ({
+      value: category.CategoryID,
+      label: category.category,
+    }));
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};

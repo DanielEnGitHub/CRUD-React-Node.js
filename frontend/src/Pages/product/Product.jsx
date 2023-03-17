@@ -11,6 +11,9 @@ import TableComponent from "../../components/Tables/Table";
 import Swal from "sweetalert2";
 import moment from "moment";
 
+// react-select
+import Select from "react-select";
+
 // excel
 import { DownloadTableExcel } from "react-export-table-to-excel";
 
@@ -24,6 +27,7 @@ import * as yup from "yup";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
+import { getAsyncCategories } from "../../conection/category";
 
 // yup configuration
 const schema = yup.object().shape({
@@ -69,6 +73,7 @@ const Product = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    setDataByID({});
     setIsEdit(false);
     setShow(true);
   };
@@ -246,6 +251,17 @@ const Product = () => {
       errors: errors.price_sale?.message,
     },
   ];
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const response = await getAsyncCategories();
+      setCategories(response);
+    };
+    getCategories();
+  }, []);
+
   return (
     <div style={{ padding: "30px" }}>
       <Modal show={show} onHide={handleClose}>
@@ -275,9 +291,17 @@ const Product = () => {
                   </div>
                 );
               })}
+
+              <Form.Label style={{ marginLeft: "10px" }}>Category</Form.Label>
+              <Select
+                name="category"
+                defaultValue={dataByID.category}
+                // onChange={setSelectedOption}
+                options={categories}
+                isMulti={true}
+                {...register("category")}
+              />
             </Form.Group>
-            {/* errors will return when field validation fails  */}
-            {/* {errors.name && <span>This field is required</span>} */}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -301,9 +325,14 @@ const Product = () => {
         sheet="Product Report"
         currentTableRef={tableRef.current}
       >
-        <Button variant={"success"} >
+        <Button variant={"success"}>
           {" "}
-          <i style={{marginRight: '5px'}} class="fa fa-file-excel-o" aria-hidden="true"></i> Export excel
+          <i
+            style={{ marginRight: "5px" }}
+            class="fa fa-file-excel-o"
+            aria-hidden="true"
+          ></i>{" "}
+          Export excel
         </Button>
       </DownloadTableExcel>
 
