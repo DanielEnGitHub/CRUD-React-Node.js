@@ -14,7 +14,15 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 
+// yup
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
+
+// yup configuration
+const schema = yup.object().shape({
+  category: yup.string().required("Name category is required please !"),
+});
 
 const Category = () => {
   const { data, getData } = useListAPI({ getFunction: getCategories });
@@ -43,7 +51,7 @@ const Category = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: {} });
+  } = useForm({ defaultValues: {}, resolver: yupResolver(schema) });
 
   if (isEdit) {
   }
@@ -127,6 +135,7 @@ const Category = () => {
       await createCategory(data);
     }
     getData();
+    setShow(false);
   };
 
   const form_input = [
@@ -135,6 +144,7 @@ const Category = () => {
       type: "text",
       placeholder: "Category name",
       label: "Name",
+      errors: errors.category?.message,
     },
     {
       name: "description",
@@ -160,6 +170,7 @@ const Category = () => {
                     <Form.Label style={{ marginLeft: "10px" }}>
                       {input.label}
                     </Form.Label>
+
                     <Form.Control
                       style={{ marginBottom: "10px" }}
                       type={input.type}
@@ -167,18 +178,20 @@ const Category = () => {
                       name={input.name}
                       {...register(input.name)}
                     />
+
+                    <p style={{ color: "red", marginLeft: "10px" }}>
+                      {input.errors}
+                    </p>
                   </div>
                 );
               })}
             </Form.Group>
-            {/* errors will return when field validation fails  */}
-            {/* {errors.name && <span>This field is required</span>} */}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button type="submit" variant="primary" onClick={handleClose}>
+            <Button type="submit" variant="primary">
               Save Changes
             </Button>
           </Modal.Footer>
