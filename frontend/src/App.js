@@ -1,17 +1,14 @@
 import * as React from "react";
-import { Link, BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Rutas from "./routes";
+import NavbarComponent from "./components/Navbar/Navbar";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <header>
-        <Link to="/"> Home</Link>
-        <Link to="products"> Products</Link>
-        <Link to="category"> Products</Link>
-        <Link to="reports"> Reports</Link>
-      </header>
-      <Rutas/>
+
+      <NavbarComponent/>
+      <Rutas />
     </BrowserRouter>
   );
 }
